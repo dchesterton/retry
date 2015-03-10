@@ -1,5 +1,5 @@
 # Go retry
-A simple Go function for retrying functions on error, with exponential backoff.
+A simple Go function for retrying functions on error, with exponential backoff. Useful for calling external services which might occassionally fail.
 
 Example
 ===========
