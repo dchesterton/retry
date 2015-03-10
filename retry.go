@@ -7,30 +7,31 @@ import (
 
 type retryFunction func(attempt *Attempt) error
 
-func Retry(fn retryFunction, tries int, startWait time.Duration) error {
+func Retry(fn retryFunction, attempts int, startWait time.Duration) error {
 	var err error
-	attemptNumber := 0
+	var wait time.Duration
 
-	for {
-		wait := startWait * time.Duration(math.Pow(2, float64(attemptNumber)))
-
-		attempt := &Attempt{
-			Number:   attemptNumber,
-			NextWait: wait,
+	for i := 0; i < attempts; i++ {
+		if i == 0 {
+			wait = 0
+		} else {
+			wait = startWait * time.Duration(math.Pow(2, float64(i-1)))
 		}
 
-		err = fn(attempt)
+		if wait > 0 {
+			time.Sleep(wait)
+		}
+
+		err = fn(&Attempt{
+			Attempt: i,
+			Total:   attempts,
+			Wait:    wait,
+		})
 
 		if err == nil {
 			return nil
 		}
-
-		attemptNumber += 1
-
-		if attemptNumber == tries {
-			return err
-		}
-
-		time.Sleep(wait)
 	}
+
+	return err
 }

@@ -37,3 +37,24 @@ func TestSuccess(t *testing.T) {
 		t.Error(err)
 	}
 }
+
+func TestAttemptStructure(t *testing.T) {
+	fn := func(attempt *Attempt) error {
+		if attempt.Attempt != 0 {
+			t.Error("Should only run once")
+		}
+
+		if attempt.Total != 3 {
+			t.Error("Total should be 3")
+		}
+
+		if attempt.Wait != 0 {
+			t.Error("Initial wait should be 0")
+		}
+
+		return nil
+	}
+
+	Retry(fn, 3, time.Millisecond*500)
+
+}

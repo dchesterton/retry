@@ -5,6 +5,7 @@ import (
 )
 
 type Attempt struct {
-	Number   int
-	NextWait time.Duration
+	Attempt int
+	Total   int
+	Wait    time.Duration
 }
