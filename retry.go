@@ -11,14 +11,11 @@ func Retry(fn retryFunction, attempts int, startWait time.Duration) error {
 	var err error
 	var wait time.Duration
 
-	for i := 0; i < attempts; i++ {
-		if i == 0 {
+	for i := 1; i <= attempts; i++ {
+		if i == 1 {
 			wait = 0
 		} else {
-			wait = startWait * time.Duration(math.Pow(2, float64(i-1)))
-		}
-
-		if wait > 0 {
+			wait = startWait * time.Duration(math.Pow(2, float64(i-2)))
 			time.Sleep(wait)
 		}
 
